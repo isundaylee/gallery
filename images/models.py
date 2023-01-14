@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 
@@ -14,3 +16,5 @@ class Image(models.Model):
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     filename = models.CharField(max_length=300)
     tags = models.ManyToManyField(Tag)
+    views = models.IntegerField(default=0)
+    file_mtime = models.DateTimeField(default=datetime.datetime.now)

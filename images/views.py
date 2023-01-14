@@ -17,6 +17,9 @@ def index(request):
 def show(request, image_id: int):
     image = Image.objects.get(id=image_id)
 
+    image.views += 1
+    image.save()
+
     tags = [
         (tag, image.tags.contains(tag))
         for tag in sorted(Tag.objects.all(), key=lambda t: t.name)

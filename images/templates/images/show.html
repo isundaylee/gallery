@@ -7,6 +7,7 @@
         <img class="image" src="{% url 'data' image.id %}" alt="{{ image.filename }}" />
     </a>
 
+    <p class="viewcount">{{ image.views }} views</p>
     <div class="tags-container">
         <a href="{% url 'tags_index' %}">Tags:</a>
         {% for tag, applied in tags %}

@@ -7,6 +7,11 @@
     width: 100%;
 }
 
+.viewcount {
+    font-size: 1.2em;
+    text-align: center;
+}
+
 .tags-container {
     margin-top: 30px;
     font-size: 1.5em;

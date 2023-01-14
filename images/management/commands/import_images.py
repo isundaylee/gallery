@@ -1,3 +1,4 @@
+import datetime
 import glob
 import json
 import logging
@@ -45,4 +46,9 @@ class Command(BaseCommand):
                     continue
 
                 logger.info("Creating image %s in repo %s", filename, repo.name)
-                repo.image_set.create(filename=filename)
+                repo.image_set.create(
+                    filename=filename,
+                    file_mtime=datetime.datetime.utcfromtimestamp(
+                        os.stat(f).st_mtime
+                    ).replace(tzinfo=datetime.timezone.utc),
+                )
