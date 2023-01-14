@@ -21,7 +21,7 @@ def show(request, image_id: int):
     image.save()
 
     tags = [
-        (tag, image.tags.contains(tag))
+        (tag, image.tags.filter(id=tag.id).exists())
         for tag in sorted(Tag.objects.all(), key=lambda t: t.name)
     ]
     tags = sorted(tags, key=lambda v: 0 if v[1] else 1)
@@ -40,7 +40,7 @@ def create_tag(request):
 
     tag, _ = Tag.objects.get_or_create(name=tag_name)
 
-    if not initial_image.tags.contains(tag):
+    if not initial_image.tags.filter(id=tag.id).exists():
         initial_image.tags.add(tag)
 
     return redirect("show", image_id=initial_image.id)
