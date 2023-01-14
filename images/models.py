@@ -18,3 +18,4 @@ class Image(models.Model):
     tags = models.ManyToManyField(Tag)
     views = models.IntegerField(default=0)
     file_mtime = models.DateTimeField(default=datetime.datetime.now)
+    import_time = models.DateTimeField(default=datetime.datetime.now)

@@ -16,10 +16,16 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     def add_arguments(self, parser: CommandParser) -> None:
         parser.add_argument("settings_json_path", type=str)
+        parser.add_argument("--clear", action="store_true")
 
-    def handle(self, settings_json_path: str, **options: Any) -> None:
+    def handle(self, settings_json_path: str, clear: bool, **options: Any) -> None:
         with open(settings_json_path) as f:
             settings = json.load(f)
+
+        if clear:
+            logger.info("Deleting all repos and images")
+            Repository.objects.all().delete()
+            Image.objects.all().delete()
 
         name: str
         path: str
@@ -51,4 +57,7 @@ class Command(BaseCommand):
                     file_mtime=datetime.datetime.utcfromtimestamp(
                         os.stat(f).st_mtime
                     ).replace(tzinfo=datetime.timezone.utc),
+                    import_time=datetime.datetime.utcnow().replace(
+                        tzinfo=datetime.timezone.utc
+                    ),
                 )
