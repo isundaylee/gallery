@@ -20,4 +20,14 @@
             <input type="text" name="tag_name">
         </form>
     </div>
+    <div class="tags-container">
+        <a href="{% url 'tags_index' %}">See More Of:</a>
+        {% for tag, applied in tags %}
+            {% if applied %}
+            <a href="{% url 'tags_show' tag.id %}">
+            <span class="tag tag-on">{{ tag.name }}</span>
+            </a>
+            {% endif %}
+        {% endfor %}
+    </div>
 </div>
