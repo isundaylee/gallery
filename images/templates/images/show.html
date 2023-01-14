@@ -3,7 +3,9 @@
 <link rel="stylesheet" href="{% static 'images/show_style.css' %}">
 
 <div class="outer-container">
-    <img class="image" src="{% url 'data' image.id %}" alt="{{ image.filename }}" />
+    <a href="{% url 'data' image.id %}">
+        <img class="image" src="{% url 'data' image.id %}" alt="{{ image.filename }}" />
+    </a>
 
     <div class="tags-container">
         <a href="{% url 'tags_index' %}">Tags:</a>

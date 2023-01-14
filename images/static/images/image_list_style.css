@@ -3,6 +3,10 @@
     margin: 0 auto;
 }
 
+a {
+    text-decoration: none;
+}
+
 .image-item {
     width: 30%;
     aspect-ratio: 1 / 1;
