@@ -1,0 +1,7 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'images/show_style.css' %}">
+
+<div class="outer-container">
+    <img class="image" src="{% url 'data' image.id %}" alt="{{ image.filename }}" />
+</div>

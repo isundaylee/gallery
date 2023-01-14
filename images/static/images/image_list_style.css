@@ -10,6 +10,10 @@
     object-fit: contain;
 }
 
+.image-item:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
 .image-item:nth-child(3n) {
     margin-right: 0;
 }

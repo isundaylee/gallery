@@ -11,6 +11,10 @@ def index(request):
     random.shuffle(images)
     return render(request, "images/image_list.html", {"images": images})
 
+def show(request, image_id: int):
+    image = Image.objects.get(id=image_id)
+    return render(request, "images/show.html", {"image": image})
+
 
 def data(request, image_id: int):
     image = Image.objects.get(id=image_id)
