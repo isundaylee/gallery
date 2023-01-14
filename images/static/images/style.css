@@ -1,0 +1,15 @@
+.outer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.image-item {
+    width: 30%;
+    aspect-ratio: 1 / 1;
+    margin-right: 3%;
+    object-fit: contain;
+}
+
+.image-item:nth-child(3n) {
+    margin-right: 0;
+}

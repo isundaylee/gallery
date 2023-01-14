@@ -1,0 +1,11 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'images/style.css' %}">
+
+<div class="outer-container">
+    <ul>
+        {% for image in images %}
+        <img class="image-item" src="{% url 'data' image.id %}" alt="{{ image.filename }}">
+        {% endfor %}
+    </ul>
+</div>
