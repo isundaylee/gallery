@@ -1,0 +1,11 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'images/tags_list_style.css' %}">
+
+<div class="outer-container">
+    <ul>
+        {% for tag in tags|dictsort:"name" %}
+            <li><a href="{% url 'tags_show' tag.id %}">{{ tag.name }} ({{ tag.image_set.all|length }})</a></li>
+        {% endfor %}
+    </ul>
+</div>

@@ -40,6 +40,7 @@ def create_tag(request):
 
     return redirect("show", image_id=initial_image.id)
 
+
 def add_tag(request, image_id: int, tag_id: int):
     image = Image.objects.get(id=image_id)
     tag = Tag.objects.get(id=tag_id)
@@ -48,6 +49,7 @@ def add_tag(request, image_id: int, tag_id: int):
 
     return redirect("show", image_id=image.id)
 
+
 def remove_tag(request, image_id: int, tag_id: int):
     image = Image.objects.get(id=image_id)
     tag = Tag.objects.get(id=tag_id)
@@ -55,3 +57,12 @@ def remove_tag(request, image_id: int, tag_id: int):
     image.tags.remove(tag)
 
     return redirect("show", image_id=image.id)
+
+
+def tags_index(request):
+    return render(request, "images/tags_list.html", {"tags": Tag.objects.all()})
+
+
+def tags_show(request, tag_id: int):
+    tag = Tag.objects.get(id=tag_id)
+    return render(request, "images/image_list.html", {"images": tag.image_set.all()})

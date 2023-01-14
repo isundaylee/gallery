@@ -22,6 +22,7 @@
 
 .tags-container a {
     text-decoration: none;
+    color:rgba(0, 0, 0, 1.0);
 }
 
 .tag {

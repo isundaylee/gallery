@@ -6,7 +6,7 @@
     <img class="image" src="{% url 'data' image.id %}" alt="{{ image.filename }}" />
 
     <div class="tags-container">
-        Tags:
+        <a href="{% url 'tags_index' %}">Tags:</a>
         {% for tag, applied in tags %}
             <a href="{% if applied %}{% url 'remove_tag' image.id tag.id %}{% else %}{% url 'add_tag' image.id tag.id %}{% endif %}">
             <span class="tag {% if applied %}tag-on{% else %}tag-off{% endif %}">{{ tag.name }}</span>
