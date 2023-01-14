@@ -9,7 +9,9 @@ from images.models import Image, Tag
 def index(request):
     images = list(Image.objects.all())
     random.shuffle(images)
-    return render(request, "images/image_list.html", {"images": images[:30]})
+    return render(
+        request, "images/image_list.html", {"title": "Homepage", "images": images[:30]}
+    )
 
 
 def show(request, image_id: int):
@@ -65,4 +67,8 @@ def tags_index(request):
 
 def tags_show(request, tag_id: int):
     tag = Tag.objects.get(id=tag_id)
-    return render(request, "images/image_list.html", {"images": tag.image_set.all()})
+    return render(
+        request,
+        "images/image_list.html",
+        {"title": tag.name, "images": tag.image_set.all()},
+    )

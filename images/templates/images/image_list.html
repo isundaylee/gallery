@@ -3,6 +3,8 @@
 <link rel="stylesheet" href="{% static 'images/image_list_style.css' %}">
 
 <div class="outer-container">
+    <h1>{{ title }}</h1>
+
     {% for image in images %}
     <a href="{% url 'show' image.id %}">
         <img class="image-item" src="{% url 'data' image.id %}" alt="{{ image.filename }}">
