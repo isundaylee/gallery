@@ -14,6 +14,15 @@ def index(request):
     )
 
 
+def recent(request, page: int = 0):
+    images = list(Image.objects.order_by("import_time").reverse())
+    return render(
+        request,
+        "images/image_list.html",
+        {"title": "Recent", "images": images[30 * page : 30 * (page + 1)]},
+    )
+
+
 def show(request, image_id: int):
     image = Image.objects.get(id=image_id)
 

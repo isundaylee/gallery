@@ -11,4 +11,6 @@ urlpatterns = [
     path("remove_tag/<int:image_id>/<int:tag_id>", views.remove_tag, name="remove_tag"),
     path("tags", views.tags_index, name="tags_index"),
     path("tags/<int:tag_id>", views.tags_show, name="tags_show"),
+    path("recent", views.recent, name="recent"),
+    path("recent/<int:page>", views.recent, name="recent"),
 ]
