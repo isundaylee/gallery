@@ -61,6 +61,9 @@ def add_tag(request, image_id: int, tag_id: int):
 
     image.tags.add(tag)
 
+    redirect_to = request.GET.get("redirect_to", "show")
+    if redirect_to == "review":
+        return redirect("review")
     return redirect("show", image_id=image.id)
 
 
@@ -70,6 +73,9 @@ def remove_tag(request, image_id: int, tag_id: int):
 
     image.tags.remove(tag)
 
+    redirect_to = request.GET.get("redirect_to", "show")
+    if redirect_to == "review":
+        return redirect("review")
     return redirect("show", image_id=image.id)
 
 
@@ -84,3 +90,18 @@ def tags_show(request, tag_id: int):
         "images/image_list.html",
         {"title": tag.name, "images": tag.image_set.all()},
     )
+
+
+def review(request):
+    images = Image.objects.filter(reviewed=False).order_by("-import_time")[:30]
+    tags = sorted(Tag.objects.all(), key=lambda t: t.name)
+    return render(
+        request, "images/review.html", {"images": images, "tags": tags}
+    )
+
+
+def mark_reviewed(request):
+    if request.method == "POST":
+        image_ids = request.POST.getlist("image_ids")
+        Image.objects.filter(id__in=image_ids).update(reviewed=True)
+    return redirect("review")

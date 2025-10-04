@@ -1,0 +1,31 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'images/review_style.css' %}">
+
+<div class="outer-container">
+    <h1>Review Images</h1>
+
+    <form method="post" action="{% url 'mark_reviewed' %}">
+        {% csrf_token %}
+
+        {% for image in images %}
+        <div class="review-row">
+            <input type="hidden" name="image_ids" value="{{ image.id }}">
+
+            <div class="image-container">
+                <img class="image-thumbnail" src="{% url 'data' image.id %}" alt="{{ image.filename }}">
+            </div>
+
+            <div class="tags-container">
+                {% for tag in tags %}
+                    <a href="{% if tag in image.tags.all %}{% url 'remove_tag' image.id tag.id %}?redirect_to=review{% else %}{% url 'add_tag' image.id tag.id %}?redirect_to=review{% endif %}">
+                        <button type="button" class="tag-button {% if tag in image.tags.all %}tag-on{% else %}tag-off{% endif %}">{{ tag.name }}</button>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="mark-reviewed-button">Mark All as Reviewed</button>
+    </form>
+</div>

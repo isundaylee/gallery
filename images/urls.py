@@ -13,4 +13,6 @@ urlpatterns = [
     path("tags/<int:tag_id>", views.tags_show, name="tags_show"),
     path("recent", views.recent, name="recent"),
     path("recent/<int:page>", views.recent, name="recent"),
+    path("review", views.review, name="review"),
+    path("mark_reviewed", views.mark_reviewed, name="mark_reviewed"),
 ]

@@ -1,0 +1,83 @@
+.outer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.review-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.image-container {
+    flex-shrink: 0;
+    width: 200px;
+    margin-right: 20px;
+}
+
+.image-thumbnail {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.tags-container {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-button {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.tag-button:hover {
+    background-color: #e0e0e0;
+}
+
+.tag-on {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+.tag-on:hover {
+    background-color: #45a049;
+}
+
+.tag-off {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.mark-reviewed-button {
+    display: block;
+    margin: 30px auto;
+    padding: 12px 30px;
+    font-size: 16px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.mark-reviewed-button:hover {
+    background-color: #0b7dda;
+}
