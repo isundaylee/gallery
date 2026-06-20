@@ -20,3 +20,5 @@ class Image(models.Model):
     file_mtime = models.DateTimeField(default=datetime.datetime.now)
     import_time = models.DateTimeField(default=datetime.datetime.now)
     reviewed = models.BooleanField(default=False)
+    sha256 = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+    phash = models.CharField(max_length=16, null=True, blank=True, db_index=True)

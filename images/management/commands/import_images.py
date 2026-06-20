@@ -8,6 +8,7 @@ from typing import Any
 
 from django.core.management.base import BaseCommand, CommandParser
 
+from images.hashing import hash_file
 from images.models import Repository, Image
 
 logger = logging.getLogger(__name__)
@@ -52,6 +53,15 @@ class Command(BaseCommand):
                     continue
 
                 logger.info("Creating image %s in repo %s", filename, repo.name)
+
+                try:
+                    sha256, phash = hash_file(f)
+                except Exception as e:
+                    # Undecodable/unreadable files still import; backfill hashes
+                    # later with `manage.py compute_hashes`.
+                    logger.warning("Could not hash %s: %s", filename, e)
+                    sha256, phash = None, None
+
                 repo.image_set.create(
                     filename=filename,
                     file_mtime=datetime.datetime.utcfromtimestamp(
@@ -60,4 +70,6 @@ class Command(BaseCommand):
                     import_time=datetime.datetime.utcnow().replace(
                         tzinfo=datetime.timezone.utc
                     ),
+                    sha256=sha256,
+                    phash=phash,
                 )
