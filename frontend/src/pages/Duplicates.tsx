@@ -74,10 +74,11 @@ export default function Duplicates() {
       ) : (
         <div className="flex flex-col gap-6">
           <p className="text-sm text-gray-500">
-            Each group looks like the same image. Merging keeps the
-            earliest-imported copy and folds the others’ tags and views into it.
-            Near-duplicates can be false positives (e.g. screenshots that share a
-            layout) — uncheck any image you want to keep separate before merging.
+            These are <em>near</em>-duplicates that look alike — byte-identical
+            copies are merged automatically. Merging keeps the earliest-imported
+            copy and folds the others’ tags and views into it. Near-duplicates can
+            be false positives (e.g. screenshots that share a layout) — uncheck any
+            image you want to keep separate, or dismiss the whole group.
           </p>
 
           {clusters.map((cluster, index) => {

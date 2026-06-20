@@ -8,6 +8,7 @@ from typing import Any
 
 from django.core.management.base import BaseCommand, CommandParser
 
+from images.duplicates import auto_merge_exact
 from images.hashing import hash_file
 from images.models import Repository, Image
 
@@ -73,3 +74,7 @@ class Command(BaseCommand):
                     sha256=sha256,
                     phash=phash,
                 )
+
+        merged = auto_merge_exact()
+        if merged:
+            logger.info("Auto-merged %d exact duplicate(s)", merged)

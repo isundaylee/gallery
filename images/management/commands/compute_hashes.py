@@ -4,6 +4,7 @@ from typing import Any
 
 from django.core.management.base import BaseCommand, CommandParser
 
+from images.duplicates import auto_merge_exact
 from images.hashing import hash_file
 from images.models import Image
 
@@ -41,3 +42,7 @@ class Command(BaseCommand):
                 logger.info("Hashed %d/%d", done, total)
 
         logger.info("Done: hashed %d/%d image(s)", done, total)
+
+        merged = auto_merge_exact()
+        if merged:
+            logger.info("Auto-merged %d exact duplicate(s)", merged)

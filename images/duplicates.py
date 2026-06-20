@@ -143,6 +143,17 @@ def merge_images(image_ids):
     return keeper
 
 
+def auto_merge_exact():
+    """Auto-confirm byte-identical duplicates: merge each exact (sha256) group
+    without human review, since identical bytes are unambiguously the same image.
+    Returns the number of images hidden by merging."""
+    hidden = 0
+    for ids in exact_groups(visible_hashed_rows()):
+        merge_images(ids)
+        hidden += len(ids) - 1
+    return hidden
+
+
 def dismiss_duplicates(image_ids):
     """Mark every pair among ``image_ids`` as not-duplicates, so the cluster
     stops being shown. Returns the number of images dismissed together."""
