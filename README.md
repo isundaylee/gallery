@@ -13,11 +13,18 @@ app as the frontend.
 
 ## Running in development
 
+Dependencies are managed with [uv](https://docs.astral.sh/uv/). It builds the
+virtualenv (`.venv/`) from `pyproject.toml`/`uv.lock` and can fetch a prebuilt
+Python for you, so no system build toolchain is required:
+
+```sh
+uv sync        # creates .venv and installs locked dependencies
+```
+
 Two processes. In one terminal, start Django (serves the API on port 8000):
 
 ```sh
-source env/bin/activate
-python manage.py runserver 8000
+uv run python manage.py runserver 8000
 ```
 
 In another, start the React dev server:

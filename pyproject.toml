@@ -1,0 +1,16 @@
+[project]
+name = "gallery"
+version = "0.1.0"
+description = "Django JSON API backend for the Gallery app"
+requires-python = ">=3.10"
+dependencies = [
+    "Django==4.1.5",
+    "Pillow==9.4.0",
+    "ImageHash==4.3.1",
+    "numpy==1.24.1",
+]
+
+[dependency-groups]
+dev = [
+    "black==22.12.0",
+]
