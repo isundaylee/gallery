@@ -1,34 +1,13 @@
-import logging
-from collections import defaultdict
 from typing import Any
 
-import numpy as np
 from django.core.management.base import BaseCommand, CommandParser
 
-from images.models import Image
-
-logger = logging.getLogger(__name__)
-
-
-class _UnionFind:
-    def __init__(self) -> None:
-        self.parent: dict[int, int] = {}
-
-    def find(self, x: int) -> int:
-        self.parent.setdefault(x, x)
-        while self.parent[x] != x:
-            self.parent[x] = self.parent[self.parent[x]]
-            x = self.parent[x]
-        return x
-
-    def union(self, a: int, b: int) -> None:
-        self.parent[self.find(a)] = self.find(b)
-
-    def groups(self) -> list[list[int]]:
-        clusters: dict[int, list[int]] = defaultdict(list)
-        for x in self.parent:
-            clusters[self.find(x)].append(x)
-        return [g for g in clusters.values() if len(g) > 1]
+from images.duplicates import (
+    UnionFind,
+    exact_groups,
+    hamming_pairs,
+    visible_hashed_rows,
+)
 
 
 class Command(BaseCommand):
@@ -47,58 +26,36 @@ class Command(BaseCommand):
         )
 
     def handle(self, threshold: int, exact_only: bool, **options: Any) -> None:
-        images = list(
-            Image.objects.exclude(sha256__isnull=True).values_list(
-                "id", "filename", "sha256", "phash"
-            )
-        )
-        if not images:
+        rows = visible_hashed_rows()
+        if not rows:
             self.stdout.write(
                 "No hashed images found. Run `manage.py compute_hashes` first."
             )
             return
 
-        self._report_exact(images)
-        if not exact_only:
-            self._report_near(images, threshold)
+        names = {r["id"]: r["filename"] for r in rows}
 
-    def _report_exact(self, images: list[tuple]) -> None:
-        by_sha: dict[str, list[tuple[int, str]]] = defaultdict(list)
-        for id_, filename, sha256, _ in images:
-            by_sha[sha256].append((id_, filename))
-
-        groups = [g for g in by_sha.values() if len(g) > 1]
-        self.stdout.write(f"\n=== Exact duplicates (identical bytes): {len(groups)} group(s) ===")
-        for group in sorted(groups, key=len, reverse=True):
-            self.stdout.write(f"  {len(group)} files:")
-            for id_, filename in group:
-                self.stdout.write(f"    [{id_}] {filename}")
-
-    def _report_near(self, images: list[tuple], threshold: int) -> None:
-        rows = [(id_, filename, phash) for id_, filename, _, phash in images if phash]
-        if not rows:
-            return
-
-        ids = np.array([r[0] for r in rows])
-        names = {r[0]: r[1] for r in rows}
-        vals = np.array([int(r[2], 16) for r in rows], dtype=np.uint64)
-        bits = np.unpackbits(vals.view(np.uint8).reshape(-1, 8), axis=1)  # n x 64
-
-        uf = _UnionFind()
-        dists: dict[tuple[int, int], int] = {}
-        n = len(ids)
-        for i in range(n):
-            dist = (bits[i] ^ bits).sum(axis=1)
-            for j in np.where((dist <= threshold) & (np.arange(n) > i))[0]:
-                a, b = int(ids[i]), int(ids[j])
-                uf.union(a, b)
-                dists[(a, b)] = int(dist[j])
-
-        groups = uf.groups()
+        groups = exact_groups(rows)
         self.stdout.write(
-            f"\n=== Near-duplicates (phash Hamming <= {threshold}): {len(groups)} cluster(s) ==="
+            f"\n=== Exact duplicates (identical bytes): {len(groups)} group(s) ==="
         )
         for group in sorted(groups, key=len, reverse=True):
-            self.stdout.write(f"  {len(group)} images:")
-            for id_ in sorted(group):
+            self.stdout.write(f"  {len(group)} files:")
+            for id_ in group:
+                self.stdout.write(f"    [{id_}] {names[id_]}")
+
+        if exact_only:
+            return
+
+        uf = UnionFind()
+        for a, b, _ in hamming_pairs(rows, threshold):
+            uf.union(a, b)
+        clusters = uf.groups()
+        self.stdout.write(
+            f"\n=== Near-duplicates (phash Hamming <= {threshold}): "
+            f"{len(clusters)} cluster(s) ==="
+        )
+        for cluster in sorted(clusters, key=len, reverse=True):
+            self.stdout.write(f"  {len(cluster)} images:")
+            for id_ in sorted(cluster):
                 self.stdout.write(f"    [{id_}] {names[id_]}")

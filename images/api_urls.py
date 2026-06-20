@@ -15,4 +15,11 @@ urlpatterns = [
     path("tags", api.tags_index, name="api_tags_index"),
     path("review", api.review_index, name="api_review_index"),
     path("review/mark", api.review_mark, name="api_review_mark"),
+    path("duplicates", api.duplicates_index, name="api_duplicates_index"),
+    path("duplicates/merge", api.duplicates_merge, name="api_duplicates_merge"),
+    path(
+        "duplicates/dismiss",
+        api.duplicates_dismiss,
+        name="api_duplicates_dismiss",
+    ),
 ]

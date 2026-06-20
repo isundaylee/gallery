@@ -3,6 +3,7 @@ import ImageList from './pages/ImageList'
 import ImageShow from './pages/ImageShow'
 import TagsList from './pages/TagsList'
 import Review from './pages/Review'
+import Duplicates from './pages/Duplicates'
 
 const navLink = ({ isActive }: { isActive: boolean }) =>
   `text-sm font-medium transition ${
@@ -30,6 +31,9 @@ export default function App() {
             <NavLink to="/review" className={navLink}>
               Review
             </NavLink>
+            <NavLink to="/duplicates" className={navLink}>
+              Duplicates
+            </NavLink>
           </div>
         </div>
       </nav>
@@ -41,6 +45,7 @@ export default function App() {
         <Route path="/tags/:tagId" element={<ImageList mode="tag" />} />
         <Route path="/images/:imageId" element={<ImageShow />} />
         <Route path="/review" element={<Review />} />
+        <Route path="/duplicates" element={<Duplicates />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
