@@ -1,17 +1,37 @@
-import { Link, Navigate, Route, Routes } from 'react-router-dom'
+import { NavLink, Navigate, Route, Routes } from 'react-router-dom'
 import ImageList from './pages/ImageList'
 import ImageShow from './pages/ImageShow'
 import TagsList from './pages/TagsList'
 import Review from './pages/Review'
 
+const navLink = ({ isActive }: { isActive: boolean }) =>
+  `text-sm font-medium transition ${
+    isActive ? 'text-brand' : 'text-gray-500 hover:text-gray-900'
+  }`
+
 export default function App() {
   return (
     <>
-      <nav className="nav">
-        <Link to="/">Home</Link>
-        <Link to="/recent">Recent</Link>
-        <Link to="/tags">Tags</Link>
-        <Link to="/review">Review</Link>
+      <nav className="sticky top-0 z-10 border-b border-gray-200 bg-white/90 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl items-center gap-6 px-4 py-3">
+          <NavLink to="/" className="text-lg font-semibold tracking-tight text-gray-900">
+            Gallery
+          </NavLink>
+          <div className="ml-auto flex items-center gap-5">
+            <NavLink to="/" end className={navLink}>
+              Home
+            </NavLink>
+            <NavLink to="/recent" className={navLink}>
+              Recent
+            </NavLink>
+            <NavLink to="/tags" className={navLink}>
+              Tags
+            </NavLink>
+            <NavLink to="/review" className={navLink}>
+              Review
+            </NavLink>
+          </div>
+        </div>
       </nav>
 
       <Routes>

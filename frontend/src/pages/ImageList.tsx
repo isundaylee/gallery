@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { listImages, imageDataUrl, type ImageSummary } from '../api'
-import '../styles/image_list.css'
+import { useParams, useSearchParams } from 'react-router-dom'
+import { listImages, type ImageSummary } from '../api'
+import PageShell from '../components/PageShell'
+import { ImageGrid } from '../components/ImageGrid'
+import { EmptyState, Loading } from '../components/States'
 
 // Backs three routes that all render the same grid: the random homepage,
 // the paginated "recent" feed, and the per-tag listing.
@@ -13,9 +15,10 @@ export default function ImageList({ mode }: { mode: Mode }) {
   const page = Number(searchParams.get('page') ?? 0)
 
   const [title, setTitle] = useState('')
-  const [images, setImages] = useState<ImageSummary[]>([])
+  const [images, setImages] = useState<ImageSummary[] | null>(null)
 
   useEffect(() => {
+    setImages(null)
     const params =
       mode === 'tag'
         ? { tag: Number(tagId) }
@@ -29,20 +32,14 @@ export default function ImageList({ mode }: { mode: Mode }) {
   }, [mode, tagId, page])
 
   return (
-    <div className="page-list">
-      <div className="outer-container">
-        <h1>{title}</h1>
-
-        {images.map((image) => (
-          <Link key={image.id} to={`/images/${image.id}`}>
-            <img
-              className="image-item"
-              src={imageDataUrl(image.id)}
-              alt={image.filename}
-            />
-          </Link>
-        ))}
-      </div>
-    </div>
+    <PageShell title={images ? title : ''}>
+      {images === null ? (
+        <Loading />
+      ) : images.length === 0 ? (
+        <EmptyState message="No images here yet." />
+      ) : (
+        <ImageGrid images={images} />
+      )}
+    </PageShell>
   )
 }

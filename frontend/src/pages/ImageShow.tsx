@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   addTag,
   getImage,
@@ -8,7 +8,9 @@ import {
   type ImageSummary,
   type TagOnImage,
 } from '../api'
-import '../styles/show.css'
+import PageShell from '../components/PageShell'
+import TagChip from '../components/TagChip'
+import { Loading } from '../components/States'
 
 export default function ImageShow() {
   const { imageId } = useParams()
@@ -46,48 +48,70 @@ export default function ImageShow() {
     await refreshTags()
   }
 
-  if (!image) return null
+  if (!image) {
+    return (
+      <PageShell>
+        <Loading />
+      </PageShell>
+    )
+  }
+
+  const appliedTags = tags.filter((t) => t.applied)
 
   return (
-    <div className="page-show">
-      <div className="outer-container">
-        <a href={imageDataUrl(image.id)}>
-          <img className="image" src={imageDataUrl(image.id)} alt={image.filename} />
-        </a>
+    <PageShell>
+      <a
+        href={imageDataUrl(image.id)}
+        className="block overflow-hidden rounded-xl ring-1 ring-gray-200"
+      >
+        <img
+          src={imageDataUrl(image.id)}
+          alt={image.filename}
+          className="mx-auto max-h-[75vh] w-auto"
+        />
+      </a>
 
-        <p className="viewcount">{image.views} views</p>
+      <p className="mt-3 text-center text-sm text-gray-500">
+        {image.views} {image.views === 1 ? 'view' : 'views'}
+      </p>
 
-        <div className="tags-container">
-          <Link to="/tags">Tags:</Link>
+      <section className="mt-8">
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-400">
+          Tags
+        </h2>
+        <div className="flex flex-wrap items-center gap-2">
           {tags.map((tag) => (
-            <span
+            <TagChip
               key={tag.id}
-              className={`tag ${tag.applied ? 'tag-on' : 'tag-off'}`}
+              label={tag.name}
+              active={tag.applied}
               onClick={() => toggleTag(tag)}
-            >
-              {tag.name}
-            </span>
+            />
           ))}
           <form onSubmit={submitNewTag}>
             <input
               type="text"
               value={newTag}
               onChange={(e) => setNewTag(e.target.value)}
+              placeholder="Add tag…"
+              className="rounded-lg border border-gray-300 px-3 py-1 text-sm outline-none focus:border-brand"
             />
           </form>
         </div>
+      </section>
 
-        <div className="tags-container">
-          <Link to="/tags">See More Of:</Link>
-          {tags
-            .filter((tag) => tag.applied)
-            .map((tag) => (
-              <Link key={tag.id} to={`/tags/${tag.id}`}>
-                <span className="tag tag-on">{tag.name}</span>
-              </Link>
+      {appliedTags.length > 0 && (
+        <section className="mt-6">
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-400">
+            See more of
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {appliedTags.map((tag) => (
+              <TagChip key={tag.id} label={tag.name} active to={`/tags/${tag.id}`} />
             ))}
-        </div>
-      </div>
-    </div>
+          </div>
+        </section>
+      )}
+    </PageShell>
   )
 }

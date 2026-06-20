@@ -8,10 +8,13 @@ import {
   type NamedTag,
   type ReviewImage,
 } from '../api'
-import '../styles/review.css'
+import PageShell from '../components/PageShell'
+import TagChip from '../components/TagChip'
+import { Grid, cardImageClass } from '../components/ImageGrid'
+import { EmptyState, Loading } from '../components/States'
 
 export default function Review() {
-  const [images, setImages] = useState<ReviewImage[]>([])
+  const [images, setImages] = useState<ReviewImage[] | null>(null)
   const [tags, setTags] = useState<NamedTag[]>([])
 
   const load = () =>
@@ -33,7 +36,7 @@ export default function Review() {
     }
     // Update just this image's tag set locally to avoid a full reload.
     setImages((prev) =>
-      prev.map((i) =>
+      prev?.map((i) =>
         i.id === image.id
           ? {
               ...i,
@@ -42,55 +45,68 @@ export default function Review() {
                 : [...i.tag_ids, tag.id],
             }
           : i,
-      ),
+      ) ?? prev,
     )
   }
 
-  const onMarkReviewed = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const onMarkReviewed = async () => {
+    if (!images) return
     await markReviewed(images.map((i) => i.id))
     await load()
   }
 
+  if (images === null) {
+    return (
+      <PageShell title="Review">
+        <Loading />
+      </PageShell>
+    )
+  }
+
   return (
-    <div className="page-review">
-      <div className="outer-container">
-        <h1>Review Images</h1>
-
-        <form onSubmit={onMarkReviewed}>
-          {images.map((image) => (
-            <div className="review-row" key={image.id}>
-              <div className="image-container">
-                <img
-                  className="image-thumbnail"
-                  src={imageDataUrl(image.id)}
-                  alt={image.filename}
-                />
-              </div>
-
-              <div className="tags-container">
-                {tags.map((tag) => {
-                  const applied = image.tag_ids.includes(tag.id)
-                  return (
-                    <button
+    <PageShell title="Review">
+      {images.length === 0 ? (
+        <EmptyState message="Nothing left to review. 🎉" />
+      ) : (
+        <>
+          {/* Bottom padding reserves space so the floating button never
+              covers the last row's tag buttons when scrolled to the end. */}
+          <div className="pb-28">
+            <Grid>
+              {images.map((image) => (
+              <div key={image.id} className="flex flex-col gap-3">
+                <div className="overflow-hidden rounded-xl ring-1 ring-gray-200">
+                  <img
+                    src={imageDataUrl(image.id)}
+                    alt={image.filename}
+                    className={cardImageClass}
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <TagChip
                       key={tag.id}
-                      type="button"
-                      className={`tag-button ${applied ? 'tag-on' : 'tag-off'}`}
+                      label={tag.name}
+                      active={image.tag_ids.includes(tag.id)}
                       onClick={() => toggleTag(image, tag)}
-                    >
-                      {tag.name}
-                    </button>
-                  )
-                })}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+              ))}
+            </Grid>
+          </div>
 
-          <button type="submit" className="mark-reviewed-button">
-            Mark All as Reviewed
+          {/* Stays on screen while scrolling the queue. */}
+          <button
+            type="button"
+            onClick={onMarkReviewed}
+            className="fixed bottom-6 right-6 z-20 rounded-lg bg-brand px-5 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-brand-hover"
+          >
+            Mark all reviewed
           </button>
-        </form>
-      </div>
-    </div>
+        </>
+      )}
+    </PageShell>
   )
 }

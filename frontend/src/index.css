@@ -1,26 +1,15 @@
-/* Minimal global base — the original Django templates relied on browser
-   defaults (white background, black text), so we keep this deliberately bare. */
-body {
-  margin: 0;
-  font-family: system-ui, Arial, sans-serif;
-  color: #000;
+@import 'tailwindcss';
+
+/* Design tokens — a single restrained accent plus the shared content width,
+   referenced everywhere instead of hardcoded values. Clean minimal light. */
+@theme {
+  --color-brand: #4f46e5; /* indigo-600 */
+  --color-brand-hover: #4338ca; /* indigo-700 */
+  --color-brand-soft: #eef2ff; /* indigo-50  */
+}
+
+html {
   background: #fff;
-}
-
-.nav {
-  display: flex;
-  gap: 20px;
-  padding: 12px 20px;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 10px;
-}
-
-.nav a {
-  text-decoration: none;
-  color: #333;
-  font-size: 1.1em;
-}
-
-.nav a:hover {
-  color: #000;
+  color: #111827; /* gray-900 */
+  font-family: system-ui, Arial, sans-serif;
 }

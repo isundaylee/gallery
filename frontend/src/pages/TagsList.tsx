@@ -1,28 +1,34 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { listTags, type TagWithCount } from '../api'
-import '../styles/tags_list.css'
+import PageShell from '../components/PageShell'
+import TagChip from '../components/TagChip'
+import { EmptyState, Loading } from '../components/States'
 
 export default function TagsList() {
-  const [tags, setTags] = useState<TagWithCount[]>([])
+  const [tags, setTags] = useState<TagWithCount[] | null>(null)
 
   useEffect(() => {
     listTags().then((data) => setTags(data.tags))
   }, [])
 
   return (
-    <div className="page-tags">
-      <div className="outer-container">
-        <ul>
+    <PageShell title="Tags">
+      {tags === null ? (
+        <Loading />
+      ) : tags.length === 0 ? (
+        <EmptyState message="No tags yet. Add some from an image." />
+      ) : (
+        <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
-            <li key={tag.id}>
-              <Link to={`/tags/${tag.id}`}>
-                {tag.name} ({tag.count})
-              </Link>
-            </li>
+            <TagChip
+              key={tag.id}
+              label={tag.name}
+              count={tag.count}
+              to={`/tags/${tag.id}`}
+            />
           ))}
-        </ul>
-      </div>
-    </div>
+        </div>
+      )}
+    </PageShell>
   )
 }
