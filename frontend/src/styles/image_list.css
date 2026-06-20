@@ -1,28 +1,28 @@
-.outer-container {
+.page-list .outer-container {
     max-width: 1000px;
     margin: 0 auto;
 }
 
-h1 {
+.page-list h1 {
     text-align: center;
     margin-top: 30px;
 }
 
-a {
+.page-list a {
     text-decoration: none;
 }
 
-.image-item {
+.page-list .image-item {
     width: 30%;
     aspect-ratio: 1 / 1;
     margin-right: 3%;
     object-fit: contain;
 }
 
-.image-item:hover {
+.page-list .image-item:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.image-item:nth-child(3n) {
+.page-list .image-item:nth-child(3n) {
     margin-right: 0;
 }

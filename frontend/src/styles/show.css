@@ -1,43 +1,44 @@
-.outer-container {
+.page-show .outer-container {
     max-width: 1000px;
     margin: 0 auto;
 }
 
-.image {
+.page-show .image {
     width: 100%;
 }
 
-.viewcount {
+.page-show .viewcount {
     font-size: 1.2em;
     text-align: center;
 }
 
-.tags-container {
+.page-show .tags-container {
     margin-top: 30px;
     font-size: 1.5em;
 }
 
-.tags-container form {
+.page-show .tags-container form {
     display: inline;
 }
 
-.tags-container form input {
+.page-show .tags-container form input {
     font-size: 1.0em;
 }
 
-.tags-container a {
+.page-show .tags-container a {
     text-decoration: none;
-    color:rgba(0, 0, 0, 1.0);
-}
-
-.tag {
-    margin: 0 5px;
-}
-
-.tag-on {
     color: rgba(0, 0, 0, 1.0);
 }
 
-.tag-off {
+.page-show .tag {
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.page-show .tag-on {
+    color: rgba(0, 0, 0, 1.0);
+}
+
+.page-show .tag-off {
     color: rgba(0, 0, 0, 0.3);
 }
